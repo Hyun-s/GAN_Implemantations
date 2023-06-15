@@ -517,8 +517,12 @@ class Generator(nn.Module):
 
             latent = torch.cat([latent, latent2], 1)
 
+        features = {}
+
         out = self.input(latent)
         out = self.conv1(out, latent[:, 0], noise=noise[0])
+
+        features[f'feature_{i}'] = out
 
         skip = self.to_rgb1(out, latent[:, 1])
 
@@ -527,7 +531,9 @@ class Generator(nn.Module):
                 self.convs[::2], self.convs[1::2], noise[1::2], noise[2::2], self.to_rgbs
         ):
             out = conv1(out, latent[:, i], noise=noise1)
+            features[f'feature_{i}'] = out
             out = conv2(out, latent[:, i + 1], noise=noise2)
+            features[f'feature_{i+1}'] = out
             skip = to_rgb(out, latent[:, i + 2], skip)
 
             i += 2
