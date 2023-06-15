@@ -543,7 +543,7 @@ class Generator(nn.Module):
         if return_latents:
             return image, latent
         elif return_features:
-            return image, out
+            return image, features
         else:
             return image, None
 
